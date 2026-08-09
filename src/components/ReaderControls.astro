@@ -1,0 +1,101 @@
+---
+// Reader controls: Font size adjustment & Copy link
+---
+<div class="flex items-center gap-2 rounded-xl glass px-3 py-1.5 text-xs text-slate-600 dark:text-ink-300">
+  <span class="font-medium text-slate-400 dark:text-ink-500 mr-1">Text size:</span>
+  <button
+    type="button"
+    id="font-size-down"
+    class="rounded px-1.5 py-0.5 hover:bg-slate-200 dark:hover:bg-white/10 font-bold transition-colors"
+    aria-label="Decrease text size"
+    title="Decrease font size"
+  >
+    A-
+  </button>
+  <button
+    type="button"
+    id="font-size-reset"
+    class="rounded px-1.5 py-0.5 hover:bg-slate-200 dark:hover:bg-white/10 font-medium transition-colors"
+    aria-label="Reset text size"
+    title="Reset font size"
+  >
+    Reset
+  </button>
+  <button
+    type="button"
+    id="font-size-up"
+    class="rounded px-1.5 py-0.5 hover:bg-slate-200 dark:hover:bg-white/10 font-bold transition-colors"
+    aria-label="Increase text size"
+    title="Increase font size"
+  >
+    A+
+  </button>
+
+  <span class="w-px h-4 bg-slate-200 dark:bg-white/10 mx-1"></span>
+
+  <button
+    type="button"
+    id="copy-link-btn"
+    class="inline-flex items-center gap-1 rounded px-2 py-0.5 hover:bg-slate-200 dark:hover:bg-white/10 font-medium transition-colors"
+    aria-label="Copy lesson link"
+  >
+    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+    </svg>
+    <span id="copy-btn-text">Copy link</span>
+  </button>
+</div>
+
+<script is:inline>
+  (function () {
+    const fontSizes = ['0.875rem', '1rem', '1.125rem', '1.25rem'];
+    let sizeIdx = parseInt(localStorage.getItem('reader_font_size_idx') || '1', 10);
+
+    function applyFontSize() {
+      const prose = document.querySelector('.prose');
+      if (prose) {
+        prose.style.fontSize = fontSizes[sizeIdx];
+      }
+    }
+
+    function initReaderControls() {
+      applyFontSize();
+
+      document.getElementById('font-size-down')?.addEventListener('click', () => {
+        if (sizeIdx > 0) {
+          sizeIdx--;
+          localStorage.setItem('reader_font_size_idx', sizeIdx);
+          applyFontSize();
+        }
+      });
+
+      document.getElementById('font-size-reset')?.addEventListener('click', () => {
+        sizeIdx = 1;
+        localStorage.setItem('reader_font_size_idx', sizeIdx);
+        applyFontSize();
+      });
+
+      document.getElementById('font-size-up')?.addEventListener('click', () => {
+        if (sizeIdx < fontSizes.length - 1) {
+          sizeIdx++;
+          localStorage.setItem('reader_font_size_idx', sizeIdx);
+          applyFontSize();
+        }
+      });
+
+      document.getElementById('copy-link-btn')?.addEventListener('click', () => {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          const txt = document.getElementById('copy-btn-text');
+          if (txt) {
+            txt.innerText = 'Copied!';
+            setTimeout(() => { txt.innerText = 'Copy link'; }, 2000);
+          }
+        });
+      });
+    }
+
+    document.addEventListener('astro:page-load', initReaderControls);
+    initReaderControls();
+  })();
+</script>

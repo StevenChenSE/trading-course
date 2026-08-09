@@ -24,55 +24,101 @@ const l2 = lessons2
   .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
 
 const totalWords = [...l1, ...l2].reduce((s, l) => s + l.words, 0);
+
+const topicTags = [
+  'Bounce System',
+  'Position Sizing',
+  'Trend Retracement',
+  'Breakout Strategy',
+  'Bollinger Bands',
+  'Capitulation',
+  'GUNS Scalp',
+  'Slingshot',
+];
 ---
 <BaseLayout title="Trading Course">
   <section class="relative overflow-hidden">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 pb-16 sm:pt-28 sm:pb-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 pb-16 sm:pt-24 sm:pb-20">
       <div class="max-w-3xl">
-        <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-ink-300 animate-fade-in">
-          <span class="relative flex h-1.5 w-1.5">
+        <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 dark:border-white/10 bg-slate-100/80 dark:bg-white/5 px-3.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-ink-300 animate-fade-in shadow-sm dark:shadow-none">
+          <span class="relative flex h-2 w-2">
             <span class="absolute inset-0 animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
           </span>
-          {l1.length + l2.length} lessons transcribed
+          {l1.length + l2.length} complete lesson transcripts
         </div>
-        <h1 class="mt-6 font-display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.05] animate-fade-up">
+        <h1 class="mt-6 font-display text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.08] animate-fade-up">
           <span class="gradient-text">A complete trading</span><br />
           <span class="gradient-text-warm">course, in your browser.</span>
         </h1>
-        <p class="mt-6 max-w-2xl text-lg text-ink-300 leading-relaxed animate-fade-up" style="animation-delay: 100ms">
+        <p class="mt-6 max-w-2xl text-lg text-slate-600 dark:text-ink-300 leading-relaxed animate-fade-up" style="animation-delay: 100ms">
           Two full curricula — Level 1 (Profit Snapper) and Level 2 (Market Snapper) — transcribed
-          from the original SRT files. Every number, every example, every rule. Nothing summarized, nothing abstracted.
+          from original video SRTs. Every setup, rule, and formula preserved in full.
         </p>
-        <div class="mt-8 flex flex-wrap items-center gap-3 animate-fade-up" style="animation-delay: 200ms">
+
+        <!-- Quick Search Bar in Hero -->
+        <div class="mt-8 animate-fade-up" style="animation-delay: 150ms">
+          <button
+            type="button"
+            data-open-search
+            class="group w-full max-w-lg flex items-center justify-between rounded-xl border border-slate-300 dark:border-white/15 bg-white/80 dark:bg-ink-900/80 px-4 py-3 text-sm text-slate-500 dark:text-ink-400 shadow-md dark:shadow-none hover:border-brand-500 hover:shadow-brand-500/10 transition-all text-left"
+          >
+            <span class="flex items-center gap-2.5">
+              <svg class="h-5 w-5 text-brand-500 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+              Search any strategy, indicator, or concept...
+            </span>
+            <kbd class="hidden sm:inline-block px-2 py-0.5 text-xs font-semibold text-slate-500 dark:text-ink-400 bg-slate-100 dark:bg-ink-800 rounded border border-slate-200 dark:border-white/10">⌘K</kbd>
+          </button>
+        </div>
+
+        <!-- Topic Tags -->
+        <div class="mt-4 flex flex-wrap items-center gap-2 animate-fade-up" style="animation-delay: 200ms">
+          <span class="text-xs font-medium text-slate-400 dark:text-ink-500 mr-1">Popular topics:</span>
+          {topicTags.map((tag) => (
+            <button
+              type="button"
+              data-open-search
+              data-search-query={tag}
+              class="inline-flex items-center rounded-lg border border-slate-200 dark:border-white/10 bg-white/60 dark:bg-white/5 px-2.5 py-1 text-xs font-medium text-slate-700 dark:text-ink-300 hover:border-brand-500/50 hover:text-brand-600 dark:hover:text-brand-300 hover:bg-brand-500/10 transition-all"
+            >
+              #{tag}
+            </button>
+          ))}
+        </div>
+
+        <div class="mt-8 flex flex-wrap items-center gap-4 animate-fade-up" style="animation-delay: 250ms">
           <a
             href={url('/level-1/')}
-            class="inline-flex items-center gap-2 rounded-md bg-gradient-to-br from-brand-400 to-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 hover:from-brand-300 hover:to-brand-500 transition-all"
+            class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-500 to-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 hover:scale-[1.02] transition-all"
           >
-            Start with Level 1
+            Start Level 1 — Profit Snapper
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
               <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </a>
           <a
             href={url('/level-2/')}
-            class="inline-flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-ink-100 hover:bg-white/10 hover:border-white/20 transition-colors"
+            class="inline-flex items-center gap-2 rounded-xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 px-6 py-3 text-sm font-semibold text-slate-800 dark:text-ink-100 hover:bg-slate-100 dark:hover:bg-white/10 hover:border-slate-300 dark:hover:border-white/20 transition-all"
           >
-            Jump to Level 2
+            Explore Level 2 — Market Snapper
           </a>
         </div>
+
         <dl class="mt-12 grid grid-cols-3 gap-4 sm:gap-8 max-w-xl animate-fade-up" style="animation-delay: 300ms">
-          <div>
-            <dt class="text-xs uppercase tracking-wider text-ink-500">Lessons</dt>
-            <dd class="mt-1 font-display text-2xl sm:text-3xl font-bold text-white tabular-nums">{l1.length + l2.length}</dd>
+          <div class="rounded-xl glass p-4 text-center sm:text-left">
+            <dt class="text-xs uppercase tracking-wider font-semibold text-slate-500 dark:text-ink-400">Total Lessons</dt>
+            <dd class="mt-1 font-display text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tabular-nums">{l1.length + l2.length}</dd>
           </div>
-          <div>
-            <dt class="text-xs uppercase tracking-wider text-ink-500">Words</dt>
-            <dd class="mt-1 font-display text-2xl sm:text-3xl font-bold text-white tabular-nums">{totalWords.toLocaleString()}</dd>
+          <div class="rounded-xl glass p-4 text-center sm:text-left">
+            <dt class="text-xs uppercase tracking-wider font-semibold text-slate-500 dark:text-ink-400">Total Words</dt>
+            <dd class="mt-1 font-display text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tabular-nums">{totalWords.toLocaleString()}</dd>
           </div>
-          <div>
-            <dt class="text-xs uppercase tracking-wider text-ink-500">Courses</dt>
-            <dd class="mt-1 font-display text-2xl sm:text-3xl font-bold text-white tabular-nums">2</dd>
+          <div class="rounded-xl glass p-4 text-center sm:text-left">
+            <dt class="text-xs uppercase tracking-wider font-semibold text-slate-500 dark:text-ink-400">Curricula</dt>
+            <dd class="mt-1 font-display text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tabular-nums">2</dd>
           </div>
         </dl>
       </div>
@@ -83,50 +129,49 @@ const totalWords = [...l1, ...l2].reduce((s, l) => s + l.words, 0);
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <a
         href={url('/level-1/')}
-        class="group relative overflow-hidden rounded-2xl glass glass-hover p-8 transition-all hover:-translate-y-0.5"
+        class="group relative overflow-hidden rounded-3xl glass glass-hover p-8 transition-all hover:-translate-y-1"
       >
-        <div class="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-brand-500/10 blur-3xl group-hover:bg-brand-500/20 transition-colors"></div>
+        <div class="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-brand-500/10 dark:bg-brand-500/20 blur-3xl group-hover:bg-brand-500/30 transition-colors"></div>
         <div class="relative">
-          <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset bg-gradient-to-r from-brand-500/20 to-brand-500/0 text-brand-300 ring-brand-500/30">
-            Foundational
+          <span class="inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset bg-brand-500/10 text-brand-700 dark:text-brand-300 ring-brand-500/30">
+            Foundational Curriculum
           </span>
-          <h2 class="mt-4 font-display text-2xl font-bold text-white">Level 1 — Profit Snapper</h2>
-          <p class="mt-2 text-ink-300 leading-relaxed">
-            The foundational course. Trading mechanics, technical analysis, position sizing,
-            the Bounce System, psychology, and building a complete trading plan.
+          <h2 class="mt-4 font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-300 transition-colors">
+            Level 1 — Profit Snapper
+          </h2>
+          <p class="mt-3 text-slate-600 dark:text-ink-300 leading-relaxed">
+            Trading mechanics, technical analysis, position sizing equations,
+            the Bounce System, risk management, mindset, and building a personalized trading plan.
           </p>
-          <div class="mt-6 flex items-center justify-between">
-            <span class="text-sm text-ink-400">{l1.length} lessons · {l1.reduce((s, l) => s + l.words, 0).toLocaleString()} words</span>
-            <span class="inline-flex items-center text-sm font-semibold text-brand-300 group-hover:text-brand-200">
-              Browse
-              <svg class="ml-1 h-4 w-4 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+          <div class="mt-8 flex items-center justify-between pt-4 border-t border-slate-200/60 dark:border-white/5">
+            <span class="text-sm font-medium text-slate-500 dark:text-ink-400">{l1.length} lessons · {l1.reduce((s, l) => s + l.words, 0).toLocaleString()} words</span>
+            <span class="inline-flex items-center text-sm font-bold text-brand-600 dark:text-brand-300 group-hover:translate-x-1 transition-transform">
+              Browse Level 1 →
             </span>
           </div>
         </div>
       </a>
+
       <a
         href={url('/level-2/')}
-        class="group relative overflow-hidden rounded-2xl glass glass-hover p-8 transition-all hover:-translate-y-0.5"
+        class="group relative overflow-hidden rounded-3xl glass glass-hover p-8 transition-all hover:-translate-y-1"
       >
-        <div class="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-violet-500/10 blur-3xl group-hover:bg-violet-500/20 transition-colors"></div>
+        <div class="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-violet-500/10 dark:bg-violet-500/20 blur-3xl group-hover:bg-violet-500/30 transition-colors"></div>
         <div class="relative">
-          <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset bg-gradient-to-r from-violet-500/20 to-violet-500/0 text-violet-300 ring-violet-500/30">
-            Advanced
+          <span class="inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset bg-violet-500/10 text-violet-700 dark:text-violet-300 ring-violet-500/30">
+            Advanced Strategies
           </span>
-          <h2 class="mt-4 font-display text-2xl font-bold text-white">Level 2 — Market Snapper</h2>
-          <p class="mt-2 text-ink-300 leading-relaxed">
-            Advanced systems: trend retracement, breakouts, Bollinger mean reversion,
-            capitulation, divergence, the GUNS day-trade scalper, and the Slingshot system.
+          <h2 class="mt-4 font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-300 transition-colors">
+            Level 2 — Market Snapper
+          </h2>
+          <p class="mt-3 text-slate-600 dark:text-ink-300 leading-relaxed">
+            Advanced multi-system strategies: trend retracement, breakout systems, Bollinger mean reversion,
+            capitulation setups, divergence, GUNS day-trading, and Slingshot scalping.
           </p>
-          <div class="mt-6 flex items-center justify-between">
-            <span class="text-sm text-ink-400">{l2.length} lessons · {l2.reduce((s, l) => s + l.words, 0).toLocaleString()} words</span>
-            <span class="inline-flex items-center text-sm font-semibold text-violet-300 group-hover:text-violet-200">
-              Browse
-              <svg class="ml-1 h-4 w-4 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+          <div class="mt-8 flex items-center justify-between pt-4 border-t border-slate-200/60 dark:border-white/5">
+            <span class="text-sm font-medium text-slate-500 dark:text-ink-400">{l2.length} lessons · {l2.reduce((s, l) => s + l.words, 0).toLocaleString()} words</span>
+            <span class="inline-flex items-center text-sm font-bold text-violet-600 dark:text-violet-300 group-hover:translate-x-1 transition-transform">
+              Browse Level 2 →
             </span>
           </div>
         </div>
@@ -134,3 +179,4 @@ const totalWords = [...l1, ...l2].reduce((s, l) => s + l.words, 0);
     </div>
   </section>
 </BaseLayout>
+

@@ -1,6 +1,7 @@
 ---
 import { url, BASE } from '../lib/base';
 import ThemeToggle from './ThemeToggle.astro';
+import SearchModal from './SearchModal.astro';
 
 const links = [
   { href: '/', label: 'Home' },
@@ -12,13 +13,13 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 const homePath = BASE === '' ? '/' : BASE || '/';
 const isHome = currentPath === homePath.replace(/\/$/, '') || currentPath === '/';
 ---
-<header class="sticky top-0 z-40 w-full">
-  <div class="absolute inset-0 bg-ink-950/70 backdrop-blur-xl border-b border-white/5 -z-10"></div>
+<header class="sticky top-0 z-40 w-full transition-colors">
+  <div class="absolute inset-0 bg-white/80 dark:bg-ink-950/70 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/5 -z-10"></div>
   <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div class="flex h-16 items-center justify-between">
+    <div class="flex h-16 items-center justify-between gap-4">
       <a href={url('/')} class="flex items-center gap-3 group">
         <span
-          class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-brand-400 via-brand-500 to-indigo-600 shadow-lg shadow-brand-500/30 group-hover:shadow-brand-500/50 transition-shadow"
+          class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-brand-400 via-brand-500 to-indigo-600 shadow-md shadow-brand-500/20 group-hover:shadow-brand-500/40 transition-all"
           aria-hidden="true"
         >
           <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
@@ -26,8 +27,8 @@ const isHome = currentPath === homePath.replace(/\/$/, '') || currentPath === '/
             <path d="M14 7h7v7" />
           </svg>
         </span>
-        <span class="font-display font-semibold text-lg tracking-tight text-white">
-          Trading<span class="text-brand-400">.</span>Course
+        <span class="font-display font-bold text-lg tracking-tight text-slate-900 dark:text-white">
+          Trading<span class="text-brand-500 dark:text-brand-400">.</span>Course
         </span>
       </a>
 
@@ -41,10 +42,10 @@ const isHome = currentPath === homePath.replace(/\/$/, '') || currentPath === '/
             <a
               href={href}
               class:list={[
-                'px-3 py-2 text-sm font-medium rounded-md transition-colors',
+                'px-3 py-2 text-sm font-medium rounded-lg transition-colors',
                 pathCheck
-                  ? 'text-white bg-white/5'
-                  : 'text-ink-300 hover:text-white hover:bg-white/5',
+                  ? 'text-brand-600 dark:text-white bg-brand-500/10 dark:bg-white/10 font-semibold'
+                  : 'text-slate-600 dark:text-ink-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5',
               ]}
               aria-current={pathCheck ? 'page' : undefined}
             >
@@ -55,22 +56,38 @@ const isHome = currentPath === homePath.replace(/\/$/, '') || currentPath === '/
       </div>
 
       <div class="flex items-center gap-2">
+        <button
+          type="button"
+          data-open-search
+          class="inline-flex items-center gap-2 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100/80 dark:bg-white/5 px-2.5 py-1.5 text-xs text-slate-600 dark:text-ink-300 hover:text-slate-900 dark:hover:text-white hover:border-brand-500/30 dark:hover:border-white/20 transition-all shadow-sm dark:shadow-none"
+          aria-label="Search lessons"
+        >
+          <svg class="h-4 w-4 text-slate-400 dark:text-ink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+          <span class="hidden sm:inline">Search...</span>
+          <kbd class="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 dark:text-ink-400 bg-white dark:bg-ink-800 rounded border border-slate-200 dark:border-white/10">⌘K</kbd>
+        </button>
+
         <a
           href={`https://github.com/StevenChenSE/trading-course`}
           target="_blank"
           rel="noopener noreferrer"
-          class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-ink-300 hover:text-white transition-colors"
+          class="hidden sm:inline-flex items-center gap-1.5 p-2 text-slate-500 dark:text-ink-300 hover:text-slate-900 dark:hover:text-white transition-colors"
           aria-label="GitHub"
         >
           <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.4 3.6 1 .1-.8.4-1.4.8-1.7-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.2-3.3-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.9 1.2 2 1.2 3.3 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.3v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3" />
           </svg>
         </a>
+
         <ThemeToggle />
+
         <button
           type="button"
           id="mobile-menu-btn"
-          class="md:hidden inline-flex items-center justify-center rounded-md p-2 text-ink-300 hover:text-white hover:bg-white/5"
+          class="md:hidden inline-flex items-center justify-center rounded-lg p-2 text-slate-600 dark:text-ink-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5"
           aria-label="Open menu"
           aria-expanded="false"
         >
@@ -80,10 +97,14 @@ const isHome = currentPath === homePath.replace(/\/$/, '') || currentPath === '/
         </button>
       </div>
     </div>
-    <div id="mobile-menu" class="hidden md:hidden pb-3 pt-1">
+
+    <div id="mobile-menu" class="hidden md:hidden pb-4 pt-2 border-t border-slate-200/60 dark:border-white/5">
       <div class="space-y-1">
         {links.map((link) => (
-          <a href={url(link.href)} class="block px-3 py-2 text-base font-medium text-ink-300 hover:text-white hover:bg-white/5 rounded-md">
+          <a
+            href={url(link.href)}
+            class="block px-3 py-2.5 text-base font-medium text-slate-700 dark:text-ink-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg"
+          >
             {link.label}
           </a>
         ))}
@@ -91,6 +112,8 @@ const isHome = currentPath === homePath.replace(/\/$/, '') || currentPath === '/
     </div>
   </nav>
 </header>
+
+<SearchModal />
 
 <script>
   const btn = document.getElementById('mobile-menu-btn');
@@ -101,3 +124,4 @@ const isHome = currentPath === homePath.replace(/\/$/, '') || currentPath === '/
     menu?.classList.toggle('hidden');
   });
 </script>
+

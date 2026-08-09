@@ -1,0 +1,226 @@
+---
+import { getCollection } from 'astro:content';
+import { url } from '../lib/base';
+
+const l1 = await getCollection('lessons');
+const l2 = await getCollection('lessons2');
+
+function formatLesson(entry: any, level: 'Level 1' | 'Level 2', pathPrefix: string) {
+  const stem = entry.id.replace(/\.md$/, '');
+  const title = entry.data.title ?? stem.replace(/^(Lesson|Part|I+)\s+/i, '').trim();
+  const rawBody = (entry.body ?? '').replace(/---\n[\s\S]*?\n---/, '').replace(/[\r\n]+/g, ' ');
+  const excerpt = rawBody.slice(0, 160) + '...';
+  const href = url(`/${pathPrefix}/${stem}/`);
+  return { id: entry.id, title, level, excerpt, href };
+}
+
+const searchItems = [
+  ...l1.map((e) => formatLesson(e, 'Level 1', 'level-1')),
+  ...l2.map((e) => formatLesson(e, 'Level 2', 'level-2')),
+];
+---
+
+<div
+  id="search-modal-backdrop"
+  class="fixed inset-0 z-50 hidden bg-slate-950/60 dark:bg-black/80 backdrop-blur-sm transition-opacity"
+  aria-hidden="true"
+>
+  <div class="flex min-h-full items-start justify-center p-4 pt-16 sm:pt-24">
+    <div
+      id="search-modal-panel"
+      class="relative w-full max-w-2xl overflow-hidden rounded-2xl bg-white dark:bg-ink-900 border border-slate-200 dark:border-white/10 shadow-2xl transition-all"
+    >
+      <!-- Search Input Header -->
+      <div class="relative flex items-center border-b border-slate-200 dark:border-white/10 px-4">
+        <svg class="h-5 w-5 text-slate-400 dark:text-ink-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <input
+          type="text"
+          id="search-input"
+          class="w-full bg-transparent py-4 pl-3 pr-10 text-base text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-ink-400 focus:outline-none"
+          placeholder="Search trading lessons, strategies, topics..."
+          autocomplete="off"
+        />
+        <button
+          type="button"
+          id="close-search-btn"
+          class="rounded-md p-1 text-slate-400 hover:text-slate-600 dark:text-ink-400 dark:hover:text-white"
+          aria-label="Close search"
+        >
+          <kbd class="hidden sm:inline-block px-1.5 py-0.5 text-xs font-semibold text-slate-500 dark:text-ink-400 bg-slate-100 dark:bg-ink-800 rounded border border-slate-200 dark:border-white/10">ESC</kbd>
+        </button>
+      </div>
+
+      <!-- Search Results Area -->
+      <div id="search-results" class="max-h-[60vh] overflow-y-auto p-2 divide-y divide-slate-100 dark:divide-white/5 no-scrollbar">
+        <!-- JS rendered results -->
+      </div>
+
+      <!-- Search Footer -->
+      <div class="flex items-center justify-between border-t border-slate-200 dark:border-white/10 px-4 py-2.5 text-xs text-slate-500 dark:text-ink-400 bg-slate-50/50 dark:bg-ink-950/50">
+        <div class="flex items-center gap-3">
+          <span class="inline-flex items-center gap-1">
+            <kbd class="rounded bg-slate-200 dark:bg-ink-800 px-1 py-0.5 font-mono text-[10px]">↑</kbd>
+            <kbd class="rounded bg-slate-200 dark:bg-ink-800 px-1 py-0.5 font-mono text-[10px]">↓</kbd> navigate
+          </span>
+          <span class="inline-flex items-center gap-1">
+            <kbd class="rounded bg-slate-200 dark:bg-ink-800 px-1 py-0.5 font-mono text-[10px]">↵</kbd> select
+          </span>
+        </div>
+        <span>{searchItems.length} lessons available</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ searchItems }}>
+  (function () {
+    let activeIndex = -1;
+
+    function initSearchModal() {
+      const backdrop = document.getElementById('search-modal-backdrop');
+      const input = document.getElementById('search-input');
+      const resultsContainer = document.getElementById('search-results');
+      const closeBtn = document.getElementById('close-search-btn');
+
+      if (!backdrop || !input || !resultsContainer) return;
+
+      function openModal(query = '') {
+        backdrop.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+        input.value = query;
+        renderResults(query);
+        setTimeout(() => input.focus(), 50);
+      }
+
+      function closeModal() {
+        backdrop.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+        activeIndex = -1;
+      }
+
+      function renderResults(query) {
+        const q = query.trim().toLowerCase();
+        const matches = q === '' 
+          ? searchItems.slice(0, 8) 
+          : searchItems.filter(item => 
+              item.title.toLowerCase().includes(q) || 
+              item.excerpt.toLowerCase().includes(q) ||
+              item.level.toLowerCase().includes(q)
+            );
+
+        if (matches.length === 0) {
+          resultsContainer.innerHTML = `
+            <div class="p-8 text-center text-sm text-slate-500 dark:text-ink-400">
+              No matching lessons found for "<span class="font-medium text-slate-700 dark:text-ink-200">${query}</span>"
+            </div>`;
+          activeIndex = -1;
+          return;
+        }
+
+        activeIndex = matches.length > 0 ? 0 : -1;
+
+        resultsContainer.innerHTML = matches.map((item, idx) => `
+          <a
+            href="${item.href}"
+            data-index="${idx}"
+            class="search-item group flex flex-col p-3 rounded-xl transition-colors ${idx === 0 ? 'bg-brand-500/10 text-brand-600 dark:text-brand-300' : 'hover:bg-slate-100 dark:hover:bg-white/5'}"
+          >
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-semibold px-2 py-0.5 rounded ${item.level === 'Level 1' ? 'bg-brand-500/20 text-brand-700 dark:text-brand-300' : 'bg-violet-500/20 text-violet-700 dark:text-violet-300'}">
+                ${item.level}
+              </span>
+              <span class="text-xs text-slate-400 dark:text-ink-500 group-hover:text-brand-500 transition-colors">Read lesson →</span>
+            </div>
+            <h4 class="mt-1.5 text-sm font-semibold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-300">
+              ${highlightMatch(item.title, q)}
+            </h4>
+            <p class="mt-1 text-xs text-slate-500 dark:text-ink-400 line-clamp-1">
+              ${highlightMatch(item.excerpt, q)}
+            </p>
+          </a>
+        `).join('');
+
+        updateActiveHighlight();
+      }
+
+      function highlightMatch(text, query) {
+        if (!query) return text;
+        const esc = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`(${esc})`, 'gi');
+        return text.replace(regex, '<mark class="bg-brand-500/30 text-brand-900 dark:text-brand-200 rounded px-0.5">$1</mark>');
+      }
+
+      function updateActiveHighlight() {
+        const items = resultsContainer.querySelectorAll('.search-item');
+        items.forEach((el, idx) => {
+          if (idx === activeIndex) {
+            el.classList.add('bg-brand-500/15', 'ring-1', 'ring-brand-500/30');
+            el.scrollIntoView({ block: 'nearest' });
+          } else {
+            el.classList.remove('bg-brand-500/15', 'ring-1', 'ring-brand-500/30');
+          }
+        });
+      }
+
+      input.addEventListener('input', (e) => renderResults(e.target.value));
+
+      input.addEventListener('keydown', (e) => {
+        const items = resultsContainer.querySelectorAll('.search-item');
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (items.length > 0) {
+            activeIndex = (activeIndex + 1) % items.length;
+            updateActiveHighlight();
+          }
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (items.length > 0) {
+            activeIndex = (activeIndex - 1 + items.length) % items.length;
+            updateActiveHighlight();
+          }
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (activeIndex >= 0 && items[activeIndex]) {
+            items[activeIndex].click();
+          }
+        }
+      });
+
+      // Global shortcut listeners
+      document.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          if (backdrop.classList.contains('hidden')) {
+            openModal();
+          } else {
+            closeModal();
+          }
+        } else if (e.key === 'Escape' && !backdrop.classList.contains('hidden')) {
+          closeModal();
+        }
+      });
+
+      backdrop.addEventListener('click', (e) => {
+        if (e.target === backdrop) closeModal();
+      });
+
+      closeBtn?.addEventListener('click', closeModal);
+
+      // Listen for data-open-search elements
+      document.addEventListener('click', (e) => {
+        const trigger = e.target.closest('[data-open-search]');
+        if (trigger) {
+          e.preventDefault();
+          const tag = trigger.getAttribute('data-search-query') || '';
+          openModal(tag);
+        }
+      });
+    }
+
+    document.addEventListener('astro:page-load', initSearchModal);
+    initSearchModal();
+  })();
+</script>
