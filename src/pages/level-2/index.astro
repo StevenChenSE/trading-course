@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LessonCard from '../../components/LessonCard.astro';
+import { url } from '../../lib/base';
+
+const entries = await getCollection('lessons2');
+const lessons = entries
+  .map((e) => {
+    const stem = e.id.replace(/\.md$/, '');
+    return {
+      id: stem,
+      title:
+        e.data.title ??
+        stem.replace(/^(Lesson|Part|I+)\s+/i, '').trim(),
+      words: (e.body ?? '').split(/\s+/).filter(Boolean).length,
+    };
+  })
+  .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+
+const totalWords = lessons.reduce((s, l) => s + l.words, 0);
+---
+<BaseLayout
+  title="Level 2 — Market Snapper"
+  description="Advanced trading systems: trend retracement, breakouts, Bollinger mean reversion, capitulation, divergence, GUNS day-trade, Slingshot system."
+>
+  <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 pb-12">
+    <nav class="text-sm text-ink-400 mb-6">
+      <a href={url('/')} class="hover:text-white transition-colors">Home</a>
+      <span class="mx-2 text-ink-600">/</span>
+      <span class="text-ink-200">Level 2</span>
+    </nav>
+    <div class="max-w-3xl">
+      <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset bg-gradient-to-r from-violet-500/20 to-violet-500/0 text-violet-300 ring-violet-500/30">
+        Advanced
+      </span>
+      <h1 class="mt-4 font-display text-4xl sm:text-5xl font-bold tracking-tight text-white">
+        Level 2 — <span class="gradient-text">Market Snapper</span>
+      </h1>
+      <p class="mt-4 text-lg text-ink-300 leading-relaxed">
+        Advanced systems for trend, counter-trend, and intraday trading. {lessons.length} lessons, {totalWords.toLocaleString()} words,
+        every rule and example preserved from the original lessons.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-24">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {lessons.map((l, i) => (
+        <LessonCard
+          href={url(`/level-2/${l.id}/`)}
+          index={i + 1}
+          title={l.title}
+          words={l.words}
+          badgeColor="violet"
+        />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

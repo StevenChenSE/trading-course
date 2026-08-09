@@ -1,0 +1,20 @@
+---
+// Reading progress bar
+---
+<div
+  id="reading-progress"
+  class="fixed top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-brand-400 via-violet-500 to-brand-400 z-50 origin-left scale-x-0 transition-transform"
+></div>
+<script is:inline>
+  const bar = document.getElementById('reading-progress');
+  function update() {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    const pct = max > 0 ? h.scrollTop / max : 0;
+    if (bar) bar.style.transform = `scaleX(${Math.min(1, Math.max(0, pct))})`;
+  }
+  document.addEventListener('astro:page-load', () => {
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  });
+</script>

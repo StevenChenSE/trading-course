@@ -1,0 +1,56 @@
+---
+export interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+export interface Props {
+  headings: Heading[];
+}
+const { headings } = Astro.props;
+const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+{items.length > 0 && (
+  <nav class="hidden xl:block" aria-label="On this page">
+    <div class="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto no-scrollbar pl-4 border-l border-white/5">
+      <h4 class="text-xs font-semibold uppercase tracking-wider text-ink-400 mb-3">On this page</h4>
+      <ul class="space-y-2 text-sm">
+        {items.map((h) => (
+          <li>
+            <a
+              href={`#${h.slug}`}
+              data-toc-link={h.slug}
+              class:list={[
+                'block leading-snug transition-colors',
+                h.depth === 3 ? 'pl-4' : '',
+                'text-ink-400 hover:text-white',
+              ]}
+            >
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </nav>
+)}
+
+<script>
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const slug = (entry.target as HTMLElement).id;
+        if (!slug) return;
+        const link = document.querySelector(`[data-toc-link="${slug}"]`);
+        if (entry.isIntersecting) {
+          document.querySelectorAll('[data-toc-link]').forEach((el) =>
+            el.classList.remove('text-brand-300', 'font-medium')
+          );
+          link?.classList.add('text-brand-300', 'font-medium');
+        }
+      });
+    },
+    { rootMargin: '-80px 0px -70% 0px' }
+  );
+  document.querySelectorAll('.prose h2, .prose h3').forEach((el) => observer.observe(el));
+</script>

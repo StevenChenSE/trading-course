@@ -1,0 +1,107 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: [
+          'Inter',
+          'ui-sans-serif',
+          'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'Roboto',
+          'sans-serif',
+        ],
+        mono: [
+          'JetBrains Mono',
+          'ui-monospace',
+          'SFMono-Regular',
+          'Menlo',
+          'Monaco',
+          'Consolas',
+          'monospace',
+        ],
+        display: ['"Space Grotesk"', 'Inter', 'sans-serif'],
+      },
+      colors: {
+        brand: {
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
+        },
+        ink: {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a',
+          950: '#020617',
+        },
+      },
+      typography: ({ theme }) => ({
+        invert: {
+          css: {
+            '--tw-prose-body': theme('colors.ink.300'),
+            '--tw-prose-headings': theme('colors.ink.50'),
+            '--tw-prose-lead': theme('colors.ink.300'),
+            '--tw-prose-links': theme('colors.brand.400'),
+            '--tw-prose-bold': theme('colors.ink.50'),
+            '--tw-prose-counters': theme('colors.ink.400'),
+            '--tw-prose-bullets': theme('colors.ink.500'),
+            '--tw-prose-hr': theme('colors.ink.800'),
+            '--tw-prose-quotes': theme('colors.ink.200'),
+            '--tw-prose-quote-borders': theme('colors.brand.500'),
+            '--tw-prose-captions': theme('colors.ink.400'),
+            '--tw-prose-code': theme('colors.brand.300'),
+            '--tw-prose-pre-code': theme('colors.ink.200'),
+            '--tw-prose-pre-bg': 'rgb(2 6 23 / 0.7)',
+            '--tw-prose-th-borders': theme('colors.ink.700'),
+            '--tw-prose-td-borders': theme('colors.ink.800'),
+          },
+        },
+        DEFAULT: {
+          css: {
+            '--tw-prose-body': theme('colors.ink.700'),
+            '--tw-prose-headings': theme('colors.ink.900'),
+            '--tw-prose-links': theme('colors.brand.600'),
+            '--tw-prose-bold': theme('colors.ink.900'),
+            '--tw-prose-code': theme('colors.brand.700'),
+            '--tw-prose-quote-borders': theme('colors.brand.500'),
+          },
+        },
+      }),
+      animation: {
+        'fade-in': 'fadeIn 0.6s ease-out both',
+        'fade-up': 'fadeUp 0.6s ease-out both',
+        'shimmer': 'shimmer 2.4s linear infinite',
+      },
+      keyframes: {
+        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+        fadeUp: {
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-1000px 0' },
+          '100%': { backgroundPosition: '1000px 0' },
+        },
+      },
+    },
+  },
+  plugins: [require('@tailwindcss/typography')],
+};

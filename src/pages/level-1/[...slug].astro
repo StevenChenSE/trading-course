@@ -1,0 +1,107 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
+import ProgressBar from '../../components/ProgressBar.astro';
+import { url } from '../../lib/base';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('lessons');
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+
+const stem = entry.id.replace(/\.md$/, '');
+const title = entry.data.title ?? stem.replace(/^(Lesson|Part|I+)\s+/i, '').trim();
+const words = (entry.body ?? '').split(/\s+/).filter(Boolean).length;
+const readMinutes = Math.max(1, Math.round(words / 230));
+
+const all = await getCollection('lessons');
+const sorted = all.sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+const idx = sorted.findIndex((e) => e.id === entry.id);
+const prev = idx > 0 ? sorted[idx - 1] : null;
+const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
+
+function link(e: typeof entry) {
+  return url(`/level-1/${e.id.replace(/\.md$/, '')}/`);
+}
+function prevTitle(e: typeof entry) {
+  return (e.data.title ?? e.id.replace(/\.md$/, '').replace(/^(Lesson|Part|I+)\s+/i, '')).trim();
+}
+---
+<BaseLayout title={title} description={`Lesson: ${title}. ${words.toLocaleString()} words.`}>
+  <ProgressBar />
+
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10 pb-24">
+    <div class="xl:grid xl:grid-cols-[1fr_16rem] xl:gap-10">
+      <article class="min-w-0">
+        <nav class="text-sm text-ink-400 mb-6">
+          <a href={url('/')} class="hover:text-white transition-colors">Home</a>
+          <span class="mx-2 text-ink-600">/</span>
+          <a href={url('/level-1/')} class="hover:text-white transition-colors">Level 1</a>
+        </nav>
+
+        <header class="mb-10">
+          <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset bg-gradient-to-r from-brand-500/20 to-brand-500/0 text-brand-300 ring-brand-500/30">
+            Level 1
+          </span>
+          <h1 class="mt-4 font-display text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
+            {title}
+          </h1>
+          <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-400">
+            <span class="inline-flex items-center gap-1.5">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <path d="M14 2v6h6" />
+                <path d="M16 13H8" />
+                <path d="M16 17H8" />
+                <path d="M10 9H8" />
+              </svg>
+              {words.toLocaleString()} words
+            </span>
+            <span class="text-ink-700">·</span>
+            <span class="inline-flex items-center gap-1.5">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              {readMinutes} min read
+            </span>
+          </div>
+        </header>
+
+        <div class="prose prose-invert prose-lg max-w-none prose-headings:scroll-mt-nav prose-pre:overflow-x-auto">
+          <Content />
+        </div>
+
+        <nav class="mt-16 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {prev ? (
+            <a href={link(prev)} class="group rounded-xl glass glass-hover p-5 transition-colors">
+              <span class="text-xs text-ink-500">Previous</span>
+              <p class="mt-1 text-sm font-semibold text-white group-hover:text-brand-300 transition-colors line-clamp-2">
+                {prevTitle(prev)}
+              </p>
+            </a>
+          ) : <div></div>}
+          {next ? (
+            <a href={link(next)} class="group rounded-xl glass glass-hover p-5 transition-colors text-right">
+              <span class="text-xs text-ink-500">Next</span>
+              <p class="mt-1 text-sm font-semibold text-white group-hover:text-brand-300 transition-colors line-clamp-2">
+                {prevTitle(next)}
+              </p>
+            </a>
+          ) : <div></div>}
+        </nav>
+      </article>
+
+      <aside>
+        <TableOfContents headings={headings} />
+      </aside>
+    </div>
+  </div>
+</BaseLayout>

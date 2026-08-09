@@ -1,0 +1,136 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LessonCard from '../components/LessonCard.astro';
+import { url } from '../lib/base';
+
+const lessons1 = await getCollection('lessons');
+const lessons2 = await getCollection('lessons2');
+
+function lessonMeta(entry: { id: string; data: { title?: string; description?: string }; body?: string }) {
+  const stem = entry.id.replace(/\.md$/, '');
+  const title =
+    entry.data.title ??
+    stem.replace(/^(Lesson|Part|I+)\s+/i, '').trim();
+  const words = (entry.body ?? '').split(/\s+/).filter(Boolean).length;
+  return { title, words };
+}
+
+const l1 = lessons1
+  .map((e) => ({ ...lessonMeta(e), id: e.id, data: e.data }))
+  .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+const l2 = lessons2
+  .map((e) => ({ ...lessonMeta(e), id: e.id, data: e.data }))
+  .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+
+const totalWords = [...l1, ...l2].reduce((s, l) => s + l.words, 0);
+---
+<BaseLayout title="Trading Course">
+  <section class="relative overflow-hidden">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 pb-16 sm:pt-28 sm:pb-24">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-ink-300 animate-fade-in">
+          <span class="relative flex h-1.5 w-1.5">
+            <span class="absolute inset-0 animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+          </span>
+          {l1.length + l2.length} lessons transcribed
+        </div>
+        <h1 class="mt-6 font-display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.05] animate-fade-up">
+          <span class="gradient-text">A complete trading</span><br />
+          <span class="gradient-text-warm">course, in your browser.</span>
+        </h1>
+        <p class="mt-6 max-w-2xl text-lg text-ink-300 leading-relaxed animate-fade-up" style="animation-delay: 100ms">
+          Two full curricula — Level 1 (Profit Snapper) and Level 2 (Market Snapper) — transcribed
+          from the original SRT files. Every number, every example, every rule. Nothing summarized, nothing abstracted.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center gap-3 animate-fade-up" style="animation-delay: 200ms">
+          <a
+            href={url('/level-1/')}
+            class="inline-flex items-center gap-2 rounded-md bg-gradient-to-br from-brand-400 to-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 hover:from-brand-300 hover:to-brand-500 transition-all"
+          >
+            Start with Level 1
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+          <a
+            href={url('/level-2/')}
+            class="inline-flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-ink-100 hover:bg-white/10 hover:border-white/20 transition-colors"
+          >
+            Jump to Level 2
+          </a>
+        </div>
+        <dl class="mt-12 grid grid-cols-3 gap-4 sm:gap-8 max-w-xl animate-fade-up" style="animation-delay: 300ms">
+          <div>
+            <dt class="text-xs uppercase tracking-wider text-ink-500">Lessons</dt>
+            <dd class="mt-1 font-display text-2xl sm:text-3xl font-bold text-white tabular-nums">{l1.length + l2.length}</dd>
+          </div>
+          <div>
+            <dt class="text-xs uppercase tracking-wider text-ink-500">Words</dt>
+            <dd class="mt-1 font-display text-2xl sm:text-3xl font-bold text-white tabular-nums">{totalWords.toLocaleString()}</dd>
+          </div>
+          <div>
+            <dt class="text-xs uppercase tracking-wider text-ink-500">Courses</dt>
+            <dd class="mt-1 font-display text-2xl sm:text-3xl font-bold text-white tabular-nums">2</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-24">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <a
+        href={url('/level-1/')}
+        class="group relative overflow-hidden rounded-2xl glass glass-hover p-8 transition-all hover:-translate-y-0.5"
+      >
+        <div class="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-brand-500/10 blur-3xl group-hover:bg-brand-500/20 transition-colors"></div>
+        <div class="relative">
+          <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset bg-gradient-to-r from-brand-500/20 to-brand-500/0 text-brand-300 ring-brand-500/30">
+            Foundational
+          </span>
+          <h2 class="mt-4 font-display text-2xl font-bold text-white">Level 1 — Profit Snapper</h2>
+          <p class="mt-2 text-ink-300 leading-relaxed">
+            The foundational course. Trading mechanics, technical analysis, position sizing,
+            the Bounce System, psychology, and building a complete trading plan.
+          </p>
+          <div class="mt-6 flex items-center justify-between">
+            <span class="text-sm text-ink-400">{l1.length} lessons · {l1.reduce((s, l) => s + l.words, 0).toLocaleString()} words</span>
+            <span class="inline-flex items-center text-sm font-semibold text-brand-300 group-hover:text-brand-200">
+              Browse
+              <svg class="ml-1 h-4 w-4 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </a>
+      <a
+        href={url('/level-2/')}
+        class="group relative overflow-hidden rounded-2xl glass glass-hover p-8 transition-all hover:-translate-y-0.5"
+      >
+        <div class="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-violet-500/10 blur-3xl group-hover:bg-violet-500/20 transition-colors"></div>
+        <div class="relative">
+          <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset bg-gradient-to-r from-violet-500/20 to-violet-500/0 text-violet-300 ring-violet-500/30">
+            Advanced
+          </span>
+          <h2 class="mt-4 font-display text-2xl font-bold text-white">Level 2 — Market Snapper</h2>
+          <p class="mt-2 text-ink-300 leading-relaxed">
+            Advanced systems: trend retracement, breakouts, Bollinger mean reversion,
+            capitulation, divergence, the GUNS day-trade scalper, and the Slingshot system.
+          </p>
+          <div class="mt-6 flex items-center justify-between">
+            <span class="text-sm text-ink-400">{l2.length} lessons · {l2.reduce((s, l) => s + l.words, 0).toLocaleString()} words</span>
+            <span class="inline-flex items-center text-sm font-semibold text-violet-300 group-hover:text-violet-200">
+              Browse
+              <svg class="ml-1 h-4 w-4 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+</BaseLayout>
