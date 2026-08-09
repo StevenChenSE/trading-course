@@ -10,9 +10,7 @@ const lessons = entries
     const stem = e.id.replace(/\.md$/, '');
     return {
       id: stem,
-      title:
-        e.data.title ??
-        stem.replace(/^(Lesson|Part|I+)\s+/i, '').trim(),
+      title: e.data.title ?? stem.replace(/^(Lesson|Part|I+)\s+/i, '').trim(),
       words: (e.body ?? '').split(/\s+/).filter(Boolean).length,
     };
   })
@@ -25,82 +23,114 @@ const modules = [
   {
     title: 'Module 1: Momentum & Trend Systems',
     desc: 'Trend retracement mechanics, breakout strategies, and momentum value rotation (MVR).',
-    filter: (id: string) => [
-      'lesson-0-part-i-momentum-trend-trading-lesson-1-to-3',
-      'lesson-1-trend-retracement',
-      'lesson-2-breakout-system',
-      'lesson-3-momentum-value-rotation-mvr',
-    ].includes(id),
+    filter: (id: string) =>
+      [
+        'lesson-0-part-i-momentum-trend-trading-lesson-1-to-3',
+        'lesson-1-trend-retracement',
+        'lesson-2-breakout-system',
+        'lesson-3-momentum-value-rotation-mvr',
+      ].includes(id),
   },
   {
     title: 'Module 2: Counter-Trend, Divergence & Mean Reversion',
     desc: 'Bollinger mean reversion, trend reversal divergence, capitulation, and signal confluence.',
-    filter: (id: string) => [
-      'lesson-3b-part-ii-counter-trend-trading-new-lesson-4-to-7',
-      'lesson-4-anticipate-trend-reversals-with-divergence-new',
-      'lesson-5-bollinger-mean-reversion',
-      'lesson-6-capitulation',
-      'lesson-7-the-power-of-confluence',
-    ].includes(id),
+    filter: (id: string) =>
+      [
+        'lesson-3b-part-ii-counter-trend-trading-new-lesson-4-to-7',
+        'lesson-4-anticipate-trend-reversals-with-divergence-new',
+        'lesson-5-bollinger-mean-reversion',
+        'lesson-6-capitulation',
+        'lesson-7-the-power-of-confluence',
+      ].includes(id),
   },
   {
     title: 'Module 3: Intraday Scalping & Advanced Systems',
     desc: 'Gap-up news day-trading (GUNS system) and the Slingshot trading framework.',
-    filter: (id: string) => [
-      'lesson-8-gap-up-news-scalp-guns',
-      'lesson-9-slingshot-trading-system',
-    ].includes(id),
+    filter: (id: string) =>
+      ['lesson-8-gap-up-news-scalp-guns', 'lesson-9-slingshot-trading-system'].includes(id),
   },
 ];
 ---
+
 <BaseLayout
   title="Level 2 — Market Snapper"
   description="Advanced trading systems: trend retracement, breakouts, Bollinger mean reversion, capitulation, divergence, GUNS day-trade, Slingshot system."
 >
-  <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-12 pb-10">
-    <nav class="text-sm text-slate-500 dark:text-ink-400 mb-6">
-      <a href={url('/')} class="hover:text-slate-900 dark:hover:text-white transition-colors">Home</a>
+  <section class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pt-12 pb-10">
+    <nav class="text-sm text-slate-500 dark:text-ink-400 mb-8">
+      <a href={url('/')} class="hover:text-slate-900 dark:hover:text-white transition-colors"
+        >Home</a
+      >
       <span class="mx-2 text-slate-300 dark:text-ink-600">/</span>
       <span class="text-slate-900 dark:text-ink-200 font-medium">Level 2</span>
     </nav>
-    <div class="max-w-3xl">
-      <span class="inline-flex items-center rounded-md px-2.5 py-1 text-xs font-semibold ring-1 ring-inset bg-violet-500/10 text-violet-700 dark:text-violet-300 ring-violet-500/30">
-        Advanced Strategies
+    <div class="flex flex-wrap items-center gap-2 text-sm">
+      <span
+        class="inline-flex items-center rounded-full border border-slate-300 dark:border-white/15 bg-white/70 dark:bg-ink-900/60 px-3 py-1 text-slate-600 dark:text-ink-300"
+      >
+        Advanced
       </span>
-      <h1 class="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-        Level 2 — <span class="gradient-text">Market Snapper</span>
-      </h1>
-      <p class="mt-4 text-lg text-slate-600 dark:text-ink-300 leading-relaxed">
-        Advanced systems for trend, counter-trend, and intraday trading. {lessons.length} lessons, {totalWords.toLocaleString()} words.
-        Organized into 3 specialized modules covering momentum, mean reversion, and scalping.
-      </p>
+      <span
+        class="inline-flex items-center rounded-full border border-slate-300 dark:border-white/15 bg-white/70 dark:bg-ink-900/60 px-3 py-1 text-slate-600 dark:text-ink-300"
+      >
+        Market Snapper
+      </span>
     </div>
+    <h1
+      class="mt-6 font-display text-[2.625rem] sm:text-5xl font-bold tracking-[-0.011em] text-slate-900 dark:text-white leading-[1.24]"
+    >
+      Level 2 — <span class="gradient-text">Market Snapper</span>
+    </h1>
+    <p class="mt-6 font-serif text-[1.35rem] text-slate-600 dark:text-ink-300 leading-[1.55]">
+      Advanced systems for trend, counter-trend, and intraday trading. {lessons.length} lessons, {
+        totalWords.toLocaleString()
+      } words. Organized into 3 specialized modules covering momentum, mean reversion, and scalping.
+    </p>
+    <div class="mt-8 flex items-center gap-3 text-base text-slate-600 dark:text-ink-300">
+      <span
+        class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-700 text-white text-sm font-semibold"
+        >SC</span
+      >
+      <a href={url('/')} class="font-semibold text-slate-900 dark:text-white hover:underline"
+        >Steven Chen</a
+      >
+      <span class="text-slate-400 dark:text-ink-500">·</span>
+      <span class="tabular-nums">{lessons.length} lessons</span>
+      <span class="text-slate-400 dark:text-ink-500">·</span>
+      <span class="tabular-nums">{totalWords.toLocaleString()} words</span>
+    </div>
+    <hr class="mt-8 border-0 border-t hairline" />
   </section>
 
-  <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-24 space-y-16">
-    {modules.map((mod) => {
-      const modLessons = lessons.filter((l) => mod.filter(l.id));
-      if (modLessons.length === 0) return null;
-      return (
-        <div class="space-y-6">
-          <div class="border-b border-slate-200/80 dark:border-white/10 pb-4">
-            <h2 class="font-display text-2xl font-bold text-slate-900 dark:text-white">{mod.title}</h2>
-            <p class="mt-1 text-sm text-slate-600 dark:text-ink-400">{mod.desc}</p>
+  <section class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-24 space-y-14">
+    {
+      modules.map((mod) => {
+        const modLessons = lessons.filter((l) => mod.filter(l.id));
+        if (modLessons.length === 0) return null;
+        return (
+          <div class="space-y-5">
+            <div class="border-b border-slate-200/80 dark:border-white/10 pb-3">
+              <h2 class="font-display text-xl font-bold tracking-[-0.012em] text-slate-900 dark:text-white">
+                {mod.title}
+              </h2>
+              <p class="mt-1 font-serif text-base text-slate-600 dark:text-ink-400">{mod.desc}</p>
+            </div>
+            <ul class="divide-y divide-slate-200/70 dark:divide-white/5">
+              {modLessons.map((l) => (
+                <li>
+                  <LessonCard
+                    href={url(`/level-2/${l.id}/`)}
+                    index={lessons.findIndex((x) => x.id === l.id) + 1}
+                    title={l.title}
+                    words={l.words}
+                    badgeColor="violet"
+                  />
+                </li>
+              ))}
+            </ul>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {modLessons.map((l) => (
-              <LessonCard
-                href={url(`/level-2/${l.id}/`)}
-                index={lessons.findIndex((x) => x.id === l.id) + 1}
-                title={l.title}
-                words={l.words}
-                badgeColor="violet"
-              />
-            ))}
-          </div>
-        </div>
-      );
-    })}
+        );
+      })
+    }
   </section>
 </BaseLayout>
-

@@ -1,0 +1,8 @@
+dist
+node_modules
+.astro
+public
+package-lock.json
+*.md
+# prettier-plugin-astro mis-parses HTML comments inside JSX expressions
+src/components/TableOfContents.astro

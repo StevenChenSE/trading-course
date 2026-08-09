@@ -35,71 +35,130 @@ function prevTitle(e: typeof entry) {
   return (e.data.title ?? e.id.replace(/\.md$/, '').replace(/^(Lesson|Part|I+)\s+/i, '')).trim();
 }
 ---
+
 <BaseLayout title={title} description={`Lesson: ${title}. ${words.toLocaleString()} words.`}>
   <ProgressBar />
 
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10 pb-24">
-    <div class="xl:grid xl:grid-cols-[1fr_16rem] xl:gap-10">
+  <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-10 pt-10 pb-24">
+    <div class="xl:grid xl:grid-cols-[minmax(0,1fr)_16rem] xl:gap-12">
       <article class="min-w-0">
-        <nav class="flex items-center justify-between gap-4 text-sm text-slate-500 dark:text-ink-400 mb-6">
+        <nav
+          class="flex items-center justify-between gap-4 text-sm text-slate-500 dark:text-ink-400 mb-10"
+        >
           <div class="flex items-center gap-2">
-            <a href={url('/')} class="hover:text-slate-900 dark:hover:text-white transition-colors">Home</a>
+            <a href={url('/')} class="hover:text-slate-900 dark:hover:text-white transition-colors"
+              >Home</a
+            >
             <span class="text-slate-300 dark:text-ink-600">/</span>
-            <a href={url('/level-2/')} class="hover:text-slate-900 dark:hover:text-white transition-colors">Level 2</a>
+            <a
+              href={url('/level-2/')}
+              class="hover:text-slate-900 dark:hover:text-white transition-colors">Level 2</a
+            >
           </div>
           <ReaderControls />
         </nav>
 
-        <header class="mb-10">
-          <span class="inline-flex items-center rounded-md px-2.5 py-1 text-xs font-semibold ring-1 ring-inset bg-violet-500/10 text-violet-700 dark:text-violet-300 ring-violet-500/30">
-            Level 2 · Market Snapper
-          </span>
-          <h1 class="mt-4 font-display text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
+        <header class="mx-auto max-w-[656px]">
+          <div class="flex flex-wrap items-center gap-2 text-sm">
+            <span
+              class="inline-flex items-center rounded-full border border-slate-300 dark:border-white/15 bg-white/70 dark:bg-ink-900/60 px-3 py-1 text-slate-600 dark:text-ink-300"
+            >
+              Level 2
+            </span>
+            <span
+              class="inline-flex items-center rounded-full border border-slate-300 dark:border-white/15 bg-white/70 dark:bg-ink-900/60 px-3 py-1 text-slate-600 dark:text-ink-300"
+            >
+              Market Snapper
+            </span>
+          </div>
+          <h1
+            class="mt-6 font-display text-[2.625rem] font-bold tracking-[-0.011em] text-slate-900 dark:text-white leading-[1.24]"
+          >
             {title}
           </h1>
-          <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500 dark:text-ink-400">
-            <span class="inline-flex items-center gap-1.5 font-medium">
-              <svg class="h-4 w-4 text-violet-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <path d="M14 2v6h6" />
-                <path d="M16 13H8" />
-                <path d="M16 17H8" />
-                <path d="M10 9H8" />
-              </svg>
-              {words.toLocaleString()} words
+          <div class="mt-8 flex items-center gap-3 text-base text-slate-600 dark:text-ink-300">
+            <span
+              class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-700 text-white text-sm font-semibold"
+            >
+              SC
             </span>
-            <span class="text-slate-300 dark:text-ink-700">·</span>
-            <span class="inline-flex items-center gap-1.5 font-medium">
-              <svg class="h-4 w-4 text-violet-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
-              {readMinutes} min read
-            </span>
+            <a href={url('/')} class="font-semibold text-slate-900 dark:text-white hover:underline"
+              >Steven Chen</a
+            >
+            <span class="text-slate-400 dark:text-ink-500">·</span>
+            <span>{readMinutes} min read</span>
+            <span class="text-slate-400 dark:text-ink-500">·</span>
+            <time>Aug 9, 2026</time>
           </div>
         </header>
 
-        <div class="prose dark:prose-invert prose-slate prose-lg max-w-none prose-headings:scroll-mt-nav prose-pre:overflow-x-auto">
+        <div
+          class="mx-auto max-w-[656px] prose dark:prose-invert mt-12 prose-headings:scroll-mt-nav prose-pre:overflow-x-auto"
+        >
           <Content />
         </div>
 
-        <nav class="mt-16 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {prev ? (
-            <a href={link(prev)} class="group rounded-2xl glass glass-hover p-5 transition-colors">
-              <span class="text-xs font-semibold text-slate-400 dark:text-ink-500">← Previous Lesson</span>
-              <p class="mt-1 text-sm font-semibold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-300 transition-colors line-clamp-2">
-                {prevTitle(prev)}
+        <hr class="mx-auto max-w-[656px] mt-16 border-0 border-t hairline" />
+
+        <footer class="mx-auto max-w-[656px] mt-8">
+          <div class="flex items-start gap-4">
+            <span
+              class="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-slate-700 text-white text-base font-semibold"
+            >
+              SC
+            </span>
+            <div class="flex-1">
+              <div
+                class="text-xs font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-ink-400"
+              >
+                Written by
+              </div>
+              <div class="mt-1 text-base font-semibold text-slate-900 dark:text-white">
+                Steven Chen
+              </div>
+              <p
+                class="mt-1 font-serif text-[15px] leading-[1.55] text-slate-600 dark:text-ink-400"
+              >
+                Trading.Course is a long-form archive of transcribed lessons for serious learners.
+                Every setup, rule, and formula preserved in full — no summaries, no skips.
               </p>
-            </a>
-          ) : <div></div>}
-          {next ? (
-            <a href={link(next)} class="group rounded-2xl glass glass-hover p-5 transition-colors text-right">
-              <span class="text-xs font-semibold text-slate-400 dark:text-ink-500">Next Lesson →</span>
-              <p class="mt-1 text-sm font-semibold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-300 transition-colors line-clamp-2">
-                {prevTitle(next)}
-              </p>
-            </a>
-          ) : <div></div>}
+            </div>
+          </div>
+        </footer>
+
+        <nav class="mx-auto max-w-[656px] mt-12 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {
+            prev ? (
+              <a
+                href={link(prev)}
+                class="group rounded-md border hairline p-4 transition-colors hover:border-slate-300 dark:hover:border-white/20"
+              >
+                <span class="text-xs font-semibold text-slate-400 dark:text-ink-500">
+                  ← Previous
+                </span>
+                <p class="mt-1 text-sm font-semibold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-300 transition-colors line-clamp-2">
+                  {prevTitle(prev)}
+                </p>
+              </a>
+            ) : (
+              <div />
+            )
+          }
+          {
+            next ? (
+              <a
+                href={link(next)}
+                class="group rounded-md border hairline p-4 transition-colors text-right hover:border-slate-300 dark:hover:border-white/20"
+              >
+                <span class="text-xs font-semibold text-slate-400 dark:text-ink-500">Next →</span>
+                <p class="mt-1 text-sm font-semibold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-300 transition-colors line-clamp-2">
+                  {prevTitle(next)}
+                </p>
+              </a>
+            ) : (
+              <div />
+            )
+          }
         </nav>
       </article>
 
@@ -109,4 +168,3 @@ function prevTitle(e: typeof entry) {
     </div>
   </div>
 </BaseLayout>
-

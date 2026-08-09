@@ -1,8 +1,8 @@
 ---
 // Reader controls: Font size adjustment & Copy link
 ---
-<div class="flex items-center gap-2 rounded-xl glass px-3 py-1.5 text-xs text-slate-600 dark:text-ink-300">
-  <span class="font-medium text-slate-400 dark:text-ink-500 mr-1">Text size:</span>
+
+<div class="flex items-center gap-1 text-xs text-slate-500 dark:text-ink-400">
   <button
     type="button"
     id="font-size-down"
@@ -40,8 +40,8 @@
     aria-label="Copy lesson link"
   >
     <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
     </svg>
     <span id="copy-btn-text">Copy link</span>
   </button>
@@ -89,7 +89,9 @@
           const txt = document.getElementById('copy-btn-text');
           if (txt) {
             txt.innerText = 'Copied!';
-            setTimeout(() => { txt.innerText = 'Copy link'; }, 2000);
+            setTimeout(() => {
+              txt.innerText = 'Copy link';
+            }, 2000);
           }
         });
       });

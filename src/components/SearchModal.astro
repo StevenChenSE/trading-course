@@ -32,9 +32,15 @@ const searchItems = [
     >
       <!-- Search Input Header -->
       <div class="relative flex items-center border-b border-slate-200 dark:border-white/10 px-4">
-        <svg class="h-5 w-5 text-slate-400 dark:text-ink-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.3-4.3" />
+        <svg
+          class="h-5 w-5 text-slate-400 dark:text-ink-400 flex-shrink-0"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.3-4.3"></path>
         </svg>
         <input
           type="text"
@@ -49,24 +55,38 @@ const searchItems = [
           class="rounded-md p-1 text-slate-400 hover:text-slate-600 dark:text-ink-400 dark:hover:text-white"
           aria-label="Close search"
         >
-          <kbd class="hidden sm:inline-block px-1.5 py-0.5 text-xs font-semibold text-slate-500 dark:text-ink-400 bg-slate-100 dark:bg-ink-800 rounded border border-slate-200 dark:border-white/10">ESC</kbd>
+          <kbd
+            class="hidden sm:inline-block px-1.5 py-0.5 text-xs font-semibold text-slate-500 dark:text-ink-400 bg-slate-100 dark:bg-ink-800 rounded border border-slate-200 dark:border-white/10"
+            >ESC</kbd
+          >
         </button>
       </div>
 
       <!-- Search Results Area -->
-      <div id="search-results" class="max-h-[60vh] overflow-y-auto p-2 divide-y divide-slate-100 dark:divide-white/5 no-scrollbar">
+      <div
+        id="search-results"
+        class="max-h-[60vh] overflow-y-auto p-2 divide-y divide-slate-100 dark:divide-white/5 no-scrollbar"
+      >
         <!-- JS rendered results -->
       </div>
 
       <!-- Search Footer -->
-      <div class="flex items-center justify-between border-t border-slate-200 dark:border-white/10 px-4 py-2.5 text-xs text-slate-500 dark:text-ink-400 bg-slate-50/50 dark:bg-ink-950/50">
+      <div
+        class="flex items-center justify-between border-t border-slate-200 dark:border-white/10 px-4 py-2.5 text-xs text-slate-500 dark:text-ink-400 bg-slate-50/50 dark:bg-ink-950/50"
+      >
         <div class="flex items-center gap-3">
           <span class="inline-flex items-center gap-1">
-            <kbd class="rounded bg-slate-200 dark:bg-ink-800 px-1 py-0.5 font-mono text-[10px]">↑</kbd>
-            <kbd class="rounded bg-slate-200 dark:bg-ink-800 px-1 py-0.5 font-mono text-[10px]">↓</kbd> navigate
+            <kbd class="rounded bg-slate-200 dark:bg-ink-800 px-1 py-0.5 font-mono text-[10px]"
+              >↑</kbd
+            >
+            <kbd class="rounded bg-slate-200 dark:bg-ink-800 px-1 py-0.5 font-mono text-[10px]"
+              >↓</kbd
+            > navigate
           </span>
           <span class="inline-flex items-center gap-1">
-            <kbd class="rounded bg-slate-200 dark:bg-ink-800 px-1 py-0.5 font-mono text-[10px]">↵</kbd> select
+            <kbd class="rounded bg-slate-200 dark:bg-ink-800 px-1 py-0.5 font-mono text-[10px]"
+              >↵</kbd
+            > select
           </span>
         </div>
         <span>{searchItems.length} lessons available</span>
@@ -103,13 +123,15 @@ const searchItems = [
 
       function renderResults(query) {
         const q = query.trim().toLowerCase();
-        const matches = q === '' 
-          ? searchItems.slice(0, 8) 
-          : searchItems.filter(item => 
-              item.title.toLowerCase().includes(q) || 
-              item.excerpt.toLowerCase().includes(q) ||
-              item.level.toLowerCase().includes(q)
-            );
+        const matches =
+          q === ''
+            ? searchItems.slice(0, 8)
+            : searchItems.filter(
+                (item) =>
+                  item.title.toLowerCase().includes(q) ||
+                  item.excerpt.toLowerCase().includes(q) ||
+                  item.level.toLowerCase().includes(q)
+              );
 
         if (matches.length === 0) {
           resultsContainer.innerHTML = `
@@ -122,7 +144,9 @@ const searchItems = [
 
         activeIndex = matches.length > 0 ? 0 : -1;
 
-        resultsContainer.innerHTML = matches.map((item, idx) => `
+        resultsContainer.innerHTML = matches
+          .map(
+            (item, idx) => `
           <a
             href="${item.href}"
             data-index="${idx}"
@@ -141,7 +165,9 @@ const searchItems = [
               ${highlightMatch(item.excerpt, q)}
             </p>
           </a>
-        `).join('');
+        `
+          )
+          .join('');
 
         updateActiveHighlight();
       }
@@ -150,7 +176,10 @@ const searchItems = [
         if (!query) return text;
         const esc = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         const regex = new RegExp(`(${esc})`, 'gi');
-        return text.replace(regex, '<mark class="bg-brand-500/30 text-brand-900 dark:text-brand-200 rounded px-0.5">$1</mark>');
+        return text.replace(
+          regex,
+          '<mark class="bg-brand-500/30 text-brand-900 dark:text-brand-200 rounded px-0.5">$1</mark>'
+        );
       }
 
       function updateActiveHighlight() {
